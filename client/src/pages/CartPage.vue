@@ -1,28 +1,29 @@
 <template>
     <div>
         <Header />
-        <div class="container mx-auto px-4 py-8">
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h1 class="text-2xl font-semibold mb-4">Your Cart</h1>
-                <table class="w-full">
+        <div class="container px-4 py-8 mx-auto">
+            <div class="p-6 bg-white rounded-lg shadow-md">
+                <h1 class="mb-4 text-2xl font-semibold">Your Cart</h1>
+                <table class="w-full text-left">
                     <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Subtotal</th>
+                        <tr class="bg-gray-100">
+                            <th class="px-4 py-2">Product</th>
+                            <th class="px-4 py-2">Quantity</th>
+                            <th class="px-4 py-2">Price</th>
+                            <th class="px-4 py-2">Subtotal</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in cartItems" :key="item.id">
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>{{ formatPrice(item.price) }}</td>
-                            <td>{{ formatPrice(item.price * item.quantity) }}</td>
+                        <tr v-for="item in cartItems" :key="item.id" class="hover:bg-gray-200">
+                            <td class="px-4 py-2 border">{{ item.product.data.attributes.name }}</td>
+                            <td class="px-4 py-2 border">{{ item.quantity }}</td>
+                            <td class="px-4 py-2 border">{{ formatPrice(item.product.data.attributes.price) }}</td>
+                            <td class="px-4 py-2 border">{{ formatPrice(item.product.data.attributes.price * item.quantity)
+                            }}</td>
                         </tr>
                     </tbody>
                 </table>
-                <p class="text-lg font-bold mt-4">Total: {{ formatPrice(totalPrice) }}</p>
+                <p class="mt-4 text-lg font-bold">Total: {{ formatPrice(totalPrice) }}</p>
             </div>
         </div>
     </div>
@@ -30,8 +31,10 @@
   
 <script>
 import Header from '@/components/Header.vue';
+import { getCartItems } from '@/api/cart';
 
 export default {
+    name: 'CartPage',
     components: {
         Header,
     },
@@ -42,18 +45,33 @@ export default {
     },
     computed: {
         totalPrice() {
-            return this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+            return this.cartItems.reduce((total, item) => total + item.product.data.attributes.price * item.quantity, 0);
         },
     },
     methods: {
         formatPrice(price) {
-            // Format price (similar to previous implementation)
+            console.log('formatPrice', price);
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price);
         },
+        removeFromCart(item) {
+            // Remove item from cart
+        },
+        checkout() {
+            // Perform checkout
+        },
+        updateQuantity(item, quantity) {
+            // Update item quantity
+        }
+    },
+    mounted() {
+        getCartItems().then(items => {
+            this.cartItems = items.data.map(item => ({ ...item.attributes, ...item }));
+            console.log('CartItems added', this.cartItems);
+        }).catch(error => {
+            console.error('Error fetching cart items:', error);
+        });
     },
 };
 </script>
   
-<style scoped>
-/* Add styling for your cart page */
-</style>
   

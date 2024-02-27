@@ -4,7 +4,8 @@
         <div v-for="product in products" :key="product.id" class="overflow-hidden bg-white rounded-lg shadow-md">
             <!-- Product image -->
             <div class="flex justify-center">
-                <img v-if="product.images" :src="'http://localhost:1337' + product.images.data[0].attributes.url" alt="Product image" class="object-cover w-full h-40" />
+                <img v-if="product.images" :src="'http://localhost:1337' + product.images.data[0].attributes.url"
+                    alt="Product image" class="object-cover w-full h-40" />
                 <img v-else src="/placeholder.jpeg" alt="Placeholder" class="object-cover w-full h-40" />
             </div>
             <div class="p-4">
@@ -30,6 +31,7 @@ import { deleteProductById } from '@/api/products';
 import { STRAPI_BASE_URL } from '../config'
 import Header from './Header.vue';
 import ProductCard from './ProductCard.vue';
+import { addProductToCart } from '@/api/cart'
 
 export default {
     name: 'ProductsList',
@@ -42,7 +44,7 @@ export default {
     },
     data() {
         return {
-            
+            cart: [],
         };
     },
     mounted() {
@@ -53,8 +55,15 @@ export default {
             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price);
         },
         addToCart(product) {
-            this.$emit('addToCart', product);
-            console.log('Add to cart clicked:', product);
+            // Add product to cart
+            addProductToCart(product)
+                .then(cartItem => {
+                    this.cart.push(cartItem);
+                    console.log('Cart item added:', cartItem);
+                    this.$emit('cartItemAdded', cartItem);
+                })
+                .catch(error => console.error('Error adding product to cart:', error));
+            console.log('Added item to Cart:', this.cart);
         },
         addNewProduct() {
             this.$router.push('/products/create');

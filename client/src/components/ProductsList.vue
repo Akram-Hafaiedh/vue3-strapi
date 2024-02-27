@@ -1,48 +1,59 @@
 <template>
-    <div>
-        <Header />
-
-        <div style="display: flex; justify-content: space-between; align-items: center">
-            <button @click="addNewProduct">Add new product</button>
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <!-- Loop through each product -->
+        <div v-for="product in products" :key="product.id" class="bg-white shadow-md rounded-lg overflow-hidden">
+            <!-- Product image -->
+            <div class="flex justify-center">
+                <img v-if="product.image" :src="product.image" alt="Product" class="w-full h-40 object-cover" />
+                <img v-else src="/placeholder.jpeg" alt="Placeholder" class="w-full h-40 object-cover" />
+            </div>
+            <div class="p-4">
+                <!-- Product name -->
+                <a @click="$emit('productClicked', product)"
+                    class="text-gray-800 font-semibold text-base hover:underline hover:cursor-pointer">{{
+                        product.name }}</a>
+                <!-- Product price -->
+                <p class="text-gray-600 text-sm mt-2">{{ formatPrice(product.price) }}</p>
+            </div>
+            <div class="p-3 text-right">
+                <!-- Add to cart button -->
+                <button @click="addToCart(product)"
+                    class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-semibold py-1 px-2 rounded-lg">
+                    Add to cart
+                </button>
+            </div>
         </div>
-
-        <ul>
-            <li v-for="product in products" :key="product.id" class="card product">
-                <ProductCard :product="product" />
-                <button @click="editProduct(product)">Edit</button>
-                <button @click="deleteProduct(product)">Delete</button>
-            </li>
-        </ul>
-
     </div>
 </template>
-  
-<script >
-import { getProducts, deleteProductById } from '../api/products';
+<script>
+import { deleteProductById } from '@/api/products';
 import Header from './Header.vue';
 import ProductCard from './ProductCard.vue';
 
 export default {
+    name: 'ProductsList',
+    props: {
+        products: Array, // Array of product objects
+    },
     components: {
         Header,
         ProductCard,
     },
     data() {
         return {
-            products: [],
         };
     },
     mounted() {
-        getProducts().then((response) => {
-            this.products = response.data.map(product => {
-                const { attributes, ...rest } = product;
-                return { ...rest, ...attributes };
-            });
-            console.log(this.products);
-        });
-        console.log('Component mounted.');
+
     },
     methods: {
+        formatPrice(price) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price);
+        },
+        addToCart(product) {
+            this.$emit('addToCart', product);
+            console.log('Add to cart clicked:', product);
+        },
         addNewProduct() {
             this.$router.push('/products/create');
         },
@@ -59,27 +70,5 @@ export default {
 };
 </script>
 
-<style scoped>
-ul {
-    list-style-type: none;
-    padding: 0;
-}
 
-li {
-    display: inline-block;
-}
-
-ul li {
-    padding: 10px 5px;
-}
-
-.card.product {
-    width: 100%;
-}
-
-button {
-    margin: 5px;
-    margin-left: auto;
-}
-</style>
 

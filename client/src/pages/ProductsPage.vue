@@ -2,7 +2,7 @@
     <div>
         <Header />
         <div class="container mx-auto">
-            <h1 class="text-5xl font-light tracking-widest mb-4 mt-8">Our Amazing Products</h1>
+            <h1 class="mt-8 mb-4 text-5xl font-light tracking-widest">Our Amazing Products</h1>
             <ProductList :products="products" @productClicked="showProductDetails" />
         </div>
     </div>
@@ -26,10 +26,12 @@ export default {
     },
     mounted() {
         getProducts().then((response) => {
+            console.log
             this.products = response.data.map(product => {
                 const { attributes, ...rest } = product;
                 return { ...rest, ...attributes };
             });
+            console.log('Products:', this.products);
         });
     },
     methods: {

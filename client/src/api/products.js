@@ -11,7 +11,7 @@ export async function getProducts(params = {}) {
     }
 
     try {
-        const response = await axios.get('http://localhost:1337/api/products', config);
+        const response = await axios.get('http://localhost:1337/api/products?populate=images', config);
         return response.data;
     } catch (error) {
         // Handle error here
@@ -25,7 +25,7 @@ export async function getProducts(params = {}) {
 
 export async function getProductById(id) {
     try {
-        const response = await axios.get(`http://localhost:1337/api/products/${id}`, {
+        const response = await axios.get(`http://localhost:1337/api/products/${id}?populate=images`, {
             headers: {
                 Authorization: `Bearer ${API_TOKEN}`
             }
@@ -74,6 +74,27 @@ export async function deleteProductById(id) {
         } else {
             console.error(`Unable to delete product with id: ${id}`, error.message, error.response);
         }
+    }
+}
+
+export async function getFeaturedProducts(){
+    try {
+        const response = await axios.get('http://localhost:1337/api/products?populate=images&filters[is_featured]=true', {
+            headers: {
+                Authorization: `Bearer ${API_TOKEN}`
+            }
+        });
+        console.log('freatured products',response.data);
+        return response.data;
+        
+    } catch (error) {
+        // Handle error here
+        if (error.response && error.response.status === 404) {
+            console.error('Unable to fetch featured products: Request failed with status code 404');
+        }else{
+            console.error('Unable to fetch featured products', error.message, error.response);
+        }
+
     }
 }
 

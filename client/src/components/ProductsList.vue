@@ -19,7 +19,7 @@
             <div class="p-3 text-right">
                 <!-- Add to cart button -->
                 <button @click="addToCart(product)"
-                    class="px-2 py-1 text-sm font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-700">
+                    class="btn-primary">
                     Add to cart
                 </button>
             </div>

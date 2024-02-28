@@ -36,3 +36,21 @@ export async function getCartItems() {
     }
 
 }
+
+export async function removeItemFromCart(cartitemId) {
+    try {
+        const response = await axios.delete(`http://localhost:1337/api/cartitems/${cartitemId}`, {
+            headers: {
+                Authorization: `Bearer ${API_TOKEN}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        // Handle error here
+        if (error.response && error.response.status === 404) {
+            console.error(`Unable to delete cart item with id: ${cartitemId}: Request failed with status code 404`);
+        } else {
+            console.error(`Unable to delete cart item with id: ${cartitemId}`, error.message, error.response);
+        }
+    }
+}

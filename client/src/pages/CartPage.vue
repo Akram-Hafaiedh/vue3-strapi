@@ -27,6 +27,11 @@
             </div>
         </div>
     </div>
+
+
+
+
+    
 </template>
   
 <script>
@@ -41,6 +46,13 @@ export default {
     data() {
         return {
             cartItems: [], // Your cart data (product items with quantities)
+            items: [
+                        { id: 1, name: 'Hollow Port', image: 'https://via.placeholder.com/150', price: 39.11, quantity: 1, description: 'Awesome yellow t-shirt' },
+                        { id: 2, name: 'Sunset Sweater', image: 'https://via.placeholder.com/150', price: 55.99, quantity: 2, description: 'Cozy sunset colors' },
+                        { id: 3, name: 'Ocean Blue Jeans', image: 'https://via.placeholder.com/150', price: 42.50, quantity: 1, description: 'Classic, comfy jeans' }
+                    ],
+            deliveryFee: 5.00,
+            discount: 0 
         };
     },
     computed: {
@@ -54,7 +66,12 @@ export default {
             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price);
         },
         removeFromCart(item) {
-            // Remove item from cart
+            const index = this.cartItems.findIndex(cartItem => cartItem.id === item.id);
+            if (index !== -1) {
+                this.cartItems.splice(index, 1);
+                removeItemFromCart(item);
+            }
+            
         },
         checkout() {
             // Perform checkout

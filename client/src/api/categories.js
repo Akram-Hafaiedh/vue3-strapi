@@ -42,7 +42,7 @@ export async function getCategoriesWithProducts(params = {}) {
             products: category.attributes.products.data.map(product => ({
                 id: product.id,
                 ...product.attributes
-            }))
+            })),
         }));
     
         console.log("🚀 ~ transformedResponse:", transformedResponse);

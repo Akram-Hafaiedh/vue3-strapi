@@ -9,7 +9,21 @@ export async function getProducts(params = {}) {
 
     try {
         const response = await axios.get('http://localhost:1337/api/products?populate=images,categories', config);
-        return response.data;
+        const transformedResponse = response.data.data.map(product => ({
+            id: product.id,
+            ...product.attributes,
+            categories: product.attributes.categories.data.map(category => ({
+                id: category.id,
+                ...category.attributes
+            })),
+            images: product.attributes.images.data.map(image => ({
+                id: image.id,
+                ...image.attributes
+            }))
+        }));
+        console.log("🚀 ~ getProducts ~ transformedResponse:", transformedResponse);
+
+        return transformedResponse;
     } catch (error) {
         // Handle error here
         if (error.response && error.response.status === 404) {
@@ -20,11 +34,11 @@ export async function getProducts(params = {}) {
     }
 }
 
+
+
 export async function getProductById(id) {
     try {
-        const response = await axios.get(`http://localhost:1337/api/products/${id}?populate=images`, {
-
-        });
+        const response = await axios.get(`http://localhost:1337/api/products/${id}?populate=images`);
         return response.data;
     } catch (error) {
         // Handle error here

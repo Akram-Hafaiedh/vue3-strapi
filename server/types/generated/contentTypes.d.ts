@@ -690,7 +690,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -723,6 +722,16 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'oneToMany',
       'api::review.review'
+    >;
+    cart: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::cart.cart'
+    >;
+    orders: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::order.order'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -806,6 +815,7 @@ export interface ApiCartCart extends Schema.CollectionType {
       'oneToMany',
       'api::cartitem.cartitem'
     >;
+    order: Attribute.Relation<'api::cart.cart', 'oneToOne', 'api::order.order'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -872,6 +882,8 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
       'oneToMany',
       'api::product.product'
     >;
+    image: Attribute.Media;
+    slug: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -932,6 +944,7 @@ export interface ApiOrderOrder extends Schema.CollectionType {
     singularName: 'order';
     pluralName: 'orders';
     displayName: 'Order';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -939,6 +952,7 @@ export interface ApiOrderOrder extends Schema.CollectionType {
   attributes: {
     status: Attribute.String;
     total_amount: Attribute.Decimal;
+    cart: Attribute.Relation<'api::order.order', 'oneToOne', 'api::cart.cart'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1033,6 +1047,39 @@ export interface ApiReviewReview extends Schema.CollectionType {
   };
 }
 
+export interface ApiStockStock extends Schema.CollectionType {
+  collectionName: 'stocks';
+  info: {
+    singularName: 'stock';
+    pluralName: 'stocks';
+    displayName: 'Stock';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    quantity: Attribute.BigInteger;
+    minimum_quantity: Attribute.BigInteger;
+    location: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::stock.stock',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::stock.stock',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -1058,6 +1105,7 @@ declare module '@strapi/types' {
       'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
       'api::review.review': ApiReviewReview;
+      'api::stock.stock': ApiStockStock;
     }
   }
 }

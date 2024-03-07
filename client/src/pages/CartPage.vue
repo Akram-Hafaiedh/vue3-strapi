@@ -47,10 +47,10 @@ export default {
         return {
             cartItems: [], // Your cart data (product items with quantities)
             items: [
-                        { id: 1, name: 'Hollow Port', image: 'https://via.placeholder.com/150', price: 39.11, quantity: 1, description: 'Awesome yellow t-shirt' },
-                        { id: 2, name: 'Sunset Sweater', image: 'https://via.placeholder.com/150', price: 55.99, quantity: 2, description: 'Cozy sunset colors' },
-                        { id: 3, name: 'Ocean Blue Jeans', image: 'https://via.placeholder.com/150', price: 42.50, quantity: 1, description: 'Classic, comfy jeans' }
-                    ],
+                { id: 1, name: 'Hollow Port', image: 'https://via.placeholder.com/150', price: 39.11, quantity: 1, description: 'Awesome yellow t-shirt' },
+                { id: 2, name: 'Sunset Sweater', image: 'https://via.placeholder.com/150', price: 55.99, quantity: 2, description: 'Cozy sunset colors' },
+                { id: 3, name: 'Ocean Blue Jeans', image: 'https://via.placeholder.com/150', price: 42.50, quantity: 1, description: 'Classic, comfy jeans' }
+            ],
             deliveryFee: 5.00,
             discount: 0 
         };

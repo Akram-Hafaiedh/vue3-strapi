@@ -8,7 +8,8 @@
             <div class="absolute inset-0 bg-black opacity-70"></div> <!-- Overlay with 40% opacity -->
             <div class="absolute inset-0 z-10 flex flex-col items-center justify-center text-white">
                 <h1 class="mb-6 text-5xl font-bold tracking-wide text-center md:text-7xl">Discover Your Style</h1>
-                <p class="mb-8 text-lg text-center md:text-xl">Explore our latest collection of fashion and accessories.</p>
+                <p class="mb-8 text-lg text-center md:text-xl">Explore our latest collection of fashion and accessories.
+                </p>
                 <router-link to="/products"
                     class="px-4 py-2 font-semibold text-gray-900 bg-white rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900">
                     Shop Now
@@ -17,18 +18,18 @@
         </section>
 
         <!-- Product Categories -->
-        <section class="py-16 bg-gradient-to-r from-gray-500 via-blue-300 to-blue-100">
+        <section class="min-h-screen py-16 bg-gradient-to-r from-gray-500 via-blue-300 to-blue-100">
             <div class="container px-6 py-8 mx-auto">
                 <h2 class="mb-8 text-4xl font-bold text-center text-white glow">Explore Our Collections</h2>
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    <!-- Sample Category -->
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 ">
                     <div v-for="category in categories" :key="category.id"
                         class="overflow-hidden transition-transform duration-200 transform bg-white rounded-lg shadow-lg hover:scale-105">
-                        <img :src="category.image" :alt="category.title" class="object-cover object-center w-full h-64" />
+                        <img :src="'http://localhost:1337' + category.image.data.attributes.url" :alt="category.name"
+                            class="object-cover object-center w-full h-64" />
                         <div class="p-4">
-                            <h3 class="text-xl font-bold text-gray-800">{{ category.title }}</h3>
-                            <p class="text-gray-600">Discover unique items in this category.</p>
-                            <router-link to="/products"
+                            <h3 class="text-xl font-bold text-gray-800">{{ category.name }}</h3>
+                            <p class="text-gray-600 line-clamp-1">{{ category.description }}.</p>
+                            <router-link to="/products/category/:id"
                                 class="block px-4 py-2 mt-4 text-white transition-colors duration-200 bg-blue-500 rounded hover:bg-blue-600">Shop
                                 Now</router-link>
                         </div>
@@ -36,6 +37,25 @@
                 </div>
             </div>
         </section>
+        <!-- <section class="min-h-screen py-16 bg-gradient-to-r from-gray-500 via-blue-300 to-blue-100">
+            <div class="container mx-auto">
+                <h2 class="mb-8 text-4xl font-bold text-center text-white glow">Explore Our Collections</h2>
+                <div class="grid justify-center grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+                    <div v-for="category in categories" :key="category.id"
+                        class="overflow-hidden transition-transform duration-200 transform bg-white rounded-lg shadow-lg hover:scale-105">
+                        <img :src="'http://localhost:1337' + category.image.data.attributes.url" :alt="category.name"
+                            class="object-cover object-center w-full h-64" />
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold text-gray-800">{{ category.name }}</h3>
+                            <p class="text-gray-600 line-clamp-1">{{ category.description }}.</p>
+                            <router-link :to="{ name: 'category', params: { id: category.id } }"
+                                class="block px-4 py-2 mt-4 text-white transition-colors duration-200 bg-blue-500 rounded hover:bg-blue-600">Shop
+                                Now</router-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> -->
 
 
 
@@ -75,7 +95,7 @@
             <div class="container mx-auto text-center">
                 <h2 class="mb-4 text-4xl font-bold text-purple-800">Cloud Logo</h2>
                 <div class="grid items-center justify-center grid-cols-3 gap-4 ">
-                    
+
                     <img src="/apple-logo.svg" alt="Apple Logo" class="w-24" />
                     <img src="/google-logo.svg" alt="Google Logo" class="w-24" />
                     <img src="/microsoft-logo.svg" alt="Microsoft Logo" class="w-24" />
@@ -95,7 +115,8 @@
                 <div class="lg:w-1/2 lg:pl-8">
                     <h2 class="mb-4 text-3xl font-extrabold text-gray-900">About Our Brand</h2>
                     <p class="mb-8 text-gray-600">
-                        We believe in quality, style, and sustainability. Our brand is dedicated to providing fashionable
+                        We believe in quality, style, and sustainability. Our brand is dedicated to providing
+                        fashionable
                         and sustainable clothing and accessories. Learn more about our journey and commitment to our
                         customers.
                     </p>
@@ -114,8 +135,11 @@
                     <!-- Display featured products here -->
                     <div v-for="product in featuredProducts" :key="product.id"
                         class="overflow-hidden bg-white rounded-lg shadow-md">
-                        <img v-if="product.images && product.images.data.length > 0" :src="'http://localhost:1337' + product.images.data[0].attributes.url" :alt="product.name" class="object-cover object-center w-full h-64" />
-                        <img v-else src="/placeholder.jpeg" :alt="product.name" class="object-cover object-center w-full h-64" />
+                        <img v-if="product.images && product.images.data.length > 0"
+                            :src="'http://localhost:1337' + product.images.data[0].attributes.url" :alt="product.name"
+                            class="object-cover object-center w-full h-64" />
+                        <img v-else src="/placeholder.jpeg" :alt="product.name"
+                            class="object-cover object-center w-full h-64" />
                         <div class="p-6">
                             <h3 class="text-xl font-semibold text-gray-800">{{ product.name }}</h3>
                             <!-- <p class="mt-2 text-gray-600">{{ product.description }}</p> -->
@@ -134,7 +158,8 @@
 
 <script>
 import Header from '@/components/Header.vue';
-import {getFeaturedProducts} from '@/api/products';
+import { getFeaturedProducts } from '@/api/products';
+import { getCategories } from '../api/categories';
 
 export default {
     name: 'HomePage',
@@ -144,6 +169,7 @@ export default {
     data() {
         return {
             featuredProducts: [],
+            categories: [],
             // featuredProducts: [ // Sample featured products data
             //     {
             //         id: 1,
@@ -164,29 +190,29 @@ export default {
             //         image: "https://via.placeholder.com/300"
             //     }
             // ],
-            categories: [
-                {
-                    id: 1,
-                    title: "Clothing",
-                    image: "https://via.placeholder.com/300",
-                    // Add more properties if needed, e.g., description, link, etc.
-                },
-                {
-                    id: 2,
-                    title: "Accessories",
-                    image: "https://via.placeholder.com/300",
-                },
-                {
-                    id: 3,
-                    title: "Electronics",
-                    image: "https://via.placeholder.com/300",
-                },
-                {
-                    id: 4,
-                    title: "Home Decor",
-                    image: "https://via.placeholder.com/300",
-                },
-            ],
+            // categories: [
+            //     {
+            //         id: 1,
+            //         title: "Clothing",
+            //         image: "https://via.placeholder.com/300",
+            //         // Add more properties if needed, e.g., description, link, etc.
+            //     },
+            //     {
+            //         id: 2,
+            //         title: "Accessories",
+            //         image: "https://via.placeholder.com/300",
+            //     },
+            //     {
+            //         id: 3,
+            //         title: "Electronics",
+            //         image: "https://via.placeholder.com/300",
+            //     },
+            //     {
+            //         id: 4,
+            //         title: "Home Decor",
+            //         image: "https://via.placeholder.com/300",
+            //     },
+            // ],
             testimonials: [
                 {
                     id: 1,
@@ -233,16 +259,29 @@ export default {
             ]
         };
     },
-    mounted(){
+    mounted() {
         console.log('Home Page mounted');
         getFeaturedProducts()
-        .then((response) => {
-            this.featuredProducts = response.data.map(product => {
-                const { attributes, ...rest } = product;
-                return { ...rest, ...attributes };
+            .then((response) => {
+                this.featuredProducts = response.data.map(product => {
+                    const { attributes, ...rest } = product;
+                    return { ...rest, ...attributes };
+                });
+                console.log('Featured Products:', this.featuredProducts);
+            }).catch((error) => {
+                console.log(error);
             });
-        });
-        console.log('Featured Products:', this.featuredProducts);
+        getCategories()
+            .then((response) => {
+                this.categories = response.data.map(category => {
+                    const { attributes, ...rest } = category;
+                    return { ...rest, ...attributes };
+                })
+                console.log('Categories:', this.categories);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
     // Component logic (methods, etc.)
 };

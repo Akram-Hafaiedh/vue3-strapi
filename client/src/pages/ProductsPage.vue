@@ -2,8 +2,28 @@
     <div>
         <Header />
         <div class="container mx-auto">
-            <h1 class="mt-8 mb-4 text-5xl font-light tracking-widest">Our Amazing Products</h1>
-            <ProductList :products="products" @productClicked="showProductDetails" />
+            <div class="w-1/4">
+                <h2 class="mb-2 text-lg font-semibold">Filter by Category:</h2>
+                <div class="flex flex-wrap">
+                    <button
+                        @click="selectCategory(null)"
+                        :class="{ 'bg-indigo-600 text-white': selectedCategory === null, 'bg-indigo-500 text-white': selectedCategory !== null }"
+                        class="p-2 m-1 rounded hover:bg-indigo-600">
+                        All
+                    </button>
+                    <button 
+                        v-for="category in categories"
+                        :key="category.id" @click="selectCategory(category)" 
+                        :class="{ 'bg-indigo-600 text-white': selectedCategory === category.name, 'bg-indigo-500 text-white': selectedCategory !== category.name }" 
+                        class="p-2 m-1 rounded hover:bg-indigo-600">
+                        {{ category.name }}
+                    </button>
+                </div>
+            </div>
+            <div class="w-3/4">
+                <h1 class="mt-8 mb-4 text-5xl font-light tracking-widest">Our Amazing Products</h1>
+                <ProductList :products="filteredProducts" @productClicked="showProductDetails" />
+            </div>
         </div>
     </div>
 </template>
@@ -12,6 +32,7 @@
 import ProductList from '@/components/ProductsList.vue';
 import { getProducts } from '@/api/products';
 import Header from '@/components/Header.vue';
+import { getCategories, getCategoriesWithProducts } from '@/api/categories';
 
 export default {
     components: {
@@ -21,26 +42,45 @@ export default {
     data() {
         return {
             products: [], // Your product data fetched from Strapi
+            categories: [], // Your category data fetched from Strapi
             selectedProduct: null,
+            selectedCategory: null,
         };
     },
     mounted() {
         getProducts().then((response) => {
-            console.log
+            console.log('Response:', response.data);
             this.products = response.data.map(product => {
                 const { attributes, ...rest } = product;
+                console.log('Products Fetched from strapi:', this.products);
                 return { ...rest, ...attributes };
             });
-            console.log('Products:', this.products);
+        }).catch((error) => {
+            console.log(error);
         });
+        getCategoriesWithProducts().then((response) => {
+            console.log('Response:', response);
+            this.categories = response;
+       
+            console.log("🚀 ~ getCategoriesWithProducts ~ this.categories:", this.categories);
+        });
+    },  
+    computed:{
+        filteredProducts(){
+            if(!this.selectedCategory){
+                return this.products
+            }
+            return this.products.filter(product => product.category === this.selectedCategory);
+        },
     },
     methods: {
         showProductDetails(product) {
             this.selectedProduct = product;
             this.$router.push(`/products/${product.id}`);
         },
-        productClicked(product) {
-            this.$emit('productClicked', product); // Emit the custom event
+        selectCategory(category){
+            this.selectedCategory = category ? category.name : null;
+            console.log(this.selectedCategory);
         }
     },
 };

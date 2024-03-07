@@ -879,7 +879,7 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
     is_featured: Attribute.Boolean;
     products: Attribute.Relation<
       'api::category.category',
-      'oneToMany',
+      'manyToMany',
       'api::product.product'
     >;
     image: Attribute.Media;
@@ -992,6 +992,11 @@ export interface ApiProductProduct extends Schema.CollectionType {
       'api::product.product',
       'oneToOne',
       'api::cartitem.cartitem'
+    >;
+    categories: Attribute.Relation<
+      'api::product.product',
+      'manyToMany',
+      'api::category.category'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

@@ -3,8 +3,9 @@ import ProductsList from '../components/ProductsList.vue'
 import ProductDetail from '../components/ProductDetail.vue';
 import CreateProduct from '../components/CreateProduct.vue';
 import ProductsPage from '../pages/ProductsPage.vue';
-import HomePage from '@/pages/Homepage.vue';
-import Cartpage from '@/pages/Cartpage.vue'
+import HomePage from '@/pages/HomePage.vue';
+import Cartpage from '@/pages/CartPage.vue';
+import AboutPage from '@/pages/AboutPage.vue';
 
 const routes = [
     { path: '/', component: HomePage },
@@ -12,7 +13,7 @@ const routes = [
     { path: '/products/create', component: CreateProduct },
     { path: '/products/:id', component: ProductDetail, props: true },
     { path: '/cart', component: Cartpage },
-    {path:'/about', component: () => import('@/pages/AboutPage.vue') },
+    { path:'/about', component: AboutPage },
 
 
 ]

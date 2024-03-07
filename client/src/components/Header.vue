@@ -31,7 +31,7 @@
             <router-link to="/products/industrial" class="hover:text-gray-400">Industrial and Manufacturing</router-link>
           </li>
           <li>
-            <router-link to="/products/finan" class="hover:text-gray-400">Financial Institutions and Trading</router-link>
+            <router-link to="/products/finance" class="hover:text-gray-400">Financial Institutions and Trading</router-link>
           </li>
           <!-- Add more second-level links as needed -->
         </ul>

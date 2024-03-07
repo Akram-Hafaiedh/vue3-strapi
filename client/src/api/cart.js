@@ -34,7 +34,6 @@ export async function getCartItems() {
     } catch (error) {
         console.error('Unable to get cart items', error.message, error.response);
     }
-
 }
 
 export async function removeItemFromCart(cartitemId) {

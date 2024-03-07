@@ -26,12 +26,7 @@
                 <p class="mt-4 text-lg font-bold">Total: {{ formatPrice(totalPrice) }}</p>
             </div>
         </div>
-    </div>
-
-
-
-
-    
+    </div>    
 </template>
   
 <script>

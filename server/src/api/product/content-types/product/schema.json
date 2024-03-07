@@ -40,6 +40,12 @@
       "relation": "oneToOne",
       "target": "api::cartitem.cartitem",
       "mappedBy": "product"
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::category.category",
+      "inversedBy": "products"
     }
   }
 }

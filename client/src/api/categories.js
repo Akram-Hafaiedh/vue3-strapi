@@ -1,4 +1,4 @@
-import { API_TOKEN } from '../config'
+import { API_TOKEN,STRAPI_BASE_URL } from '../config'
 import axios from 'axios';
 
 export async function getCategories(params = {}) {
@@ -8,7 +8,7 @@ export async function getCategories(params = {}) {
     }
 
     try {
-        const response = await axios.get('http://localhost:1337/api/categories?populate=image', config);
+        const response = await axios.get(STRAPI_BASE_URL+'/api/categories?populate=image', config);
         return response.data;
     } catch (error) {
         // Handle error here
@@ -29,7 +29,7 @@ export async function getCategoriesWithProducts(params = {}) {
     }
 
     try {
-        const response = await axios.get('http://localhost:1337/api/categories?populate=products');
+        const response = await axios.get(STRAPI_BASE_URL+'/api/categories?populate=products');
         console.log("🚀 ~ getCategoriesWithProducts ~ response:", response.data)
         // return response.data;
 

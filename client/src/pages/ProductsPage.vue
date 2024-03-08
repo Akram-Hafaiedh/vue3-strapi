@@ -1,10 +1,10 @@
 <template>
     <div>
         <Header />
-        <div class="container mx-auto">
+        <div class="container flex flex-row mx-auto mt-8">
             <div class="w-1/4">
                 <h2 class="mb-2 text-lg font-semibold">Filter by Category:</h2>
-                <div class="flex flex-wrap">
+                <div class="flex flex-col mx-6">
                     <button
                         @click="selectCategory(null)"
                         :class="{ 'bg-indigo-600 text-white': selectedCategory === null, 'bg-indigo-500 text-white': selectedCategory !== null }"
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="w-3/4">
-                <h1 class="mt-8 mb-4 text-5xl font-light tracking-widest">Our Amazing Products</h1>
+                <h1 class="mb-4 text-5xl font-light tracking-widest ">Our Amazing Products</h1>
                 <ProductList :products="filteredProducts" @productClicked="showProductDetails" />
             </div>
         </div>
@@ -49,8 +49,8 @@ export default {
     },
     mounted() {
         getProducts().then((response) => {
-            console.log('Response:', response.data);
-            this.products = response.data.map(product => {
+            console.log('Response:', response);
+            this.products = response.map(product => {
                 const { attributes, ...rest } = product;
                 console.log('Products Fetched from strapi:', this.products);
                 return { ...rest, ...attributes };
@@ -61,16 +61,21 @@ export default {
         getCategoriesWithProducts().then((response) => {
             console.log('Response:', response);
             this.categories = response;
-       
+            
             console.log("🚀 ~ getCategoriesWithProducts ~ this.categories:", this.categories);
         });
     },  
     computed:{
         filteredProducts(){
+            console.log('SelectedCategory', this.selectedCategory);
+            console.log('Categories', this.categories);
+            console.log('Products', this.products);
             if(!this.selectedCategory){
                 return this.products
             }
-            return this.products.filter(product => product.category === this.selectedCategory);
+            return this.products.filter(product =>
+                product.categories.some(category => category.name === this.selectedCategory)
+             );
         },
     },
     methods: {

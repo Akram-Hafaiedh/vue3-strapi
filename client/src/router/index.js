@@ -13,9 +13,7 @@ const routes = [
     { path: '/products/create', component: CreateProduct },
     { path: '/products/:id', component: ProductDetail, props: true },
     { path: '/cart', component: Cartpage },
-    { path:'/about', component: AboutPage },
-
-
+    { path: '/about', component: AboutPage },
 ]
 
 const router = createRouter({

@@ -1,4 +1,4 @@
-import { API_TOKEN } from '../config'
+import { API_TOKEN, STRAPI_BASE_URL } from '../config'
 import axios from 'axios'
 
 export async function getProducts(params = {}) {
@@ -8,7 +8,7 @@ export async function getProducts(params = {}) {
     }
 
     try {
-        const response = await axios.get('http://localhost:1337/api/products?populate=images,categories', config);
+        const response = await axios.get( STRAPI_BASE_URL+ '/api/products?populate=images,categories,specifications', config);
         const transformedResponse = response.data.data.map(product => ({
             id: product.id,
             ...product.attributes,
@@ -38,8 +38,30 @@ export async function getProducts(params = {}) {
 
 export async function getProductById(id) {
     try {
-        const response = await axios.get(`http://localhost:1337/api/products/${id}?populate=images`);
-        return response.data;
+        const response = await axios.get(`${STRAPI_BASE_URL}/api/products/${id}?populate=images,specifications,categories`);
+        console.log("🚀 ~ getProductById ~ response:", response.data.data);
+        const product = response.data.data;
+        const transformedResponse = {
+            id: product.id,
+            ...product.attributes,
+            categories: product.attributes.categories.data.map(category => ({
+                id: category.id,
+                ...category.attributes
+            })),
+            images: product.attributes.images.data.map(image => ({
+                id: image.id,
+                ...image.attributes
+            })),
+            specifications: product.attributes.specifications.data.map(specification => ({
+                id: specification.id,
+                ...specification.attributes
+            }))
+
+
+        };
+        console.log("🚀 ~ getProductById ~ transformedResponse:", transformedResponse)
+        return transformedResponse
+        // return response.data;
     } catch (error) {
         // Handle error here
         if (error.response && error.response.status === 404) {
@@ -54,7 +76,7 @@ export async function getProductById(id) {
 export async function createProduct(product) {
     console.log(product)
     try {
-        const response = await axios.post('http://localhost:1337/api/products', { data: product }, {
+        const response = await axios.post( STRAPI_BASE_URL +'/api/products', { data: product }, {
             headers: {
                 Authorization: `Bearer ${API_TOKEN}`
             }
@@ -70,7 +92,7 @@ export async function createProduct(product) {
 
 export async function deleteProductById(id) {
     try {
-        const response = await axios.delete(`http://localhost:1337/api/products/${id}`, {
+        const response = await axios.delete(`${STRAPI_BASE_URL}/api/products/${id}`, {
             headers: {
                 Authorization: `Bearer ${API_TOKEN}`
             }
@@ -88,7 +110,7 @@ export async function deleteProductById(id) {
 
 export async function getFeaturedProducts(){
     try {
-        const response = await axios.get('http://localhost:1337/api/products?populate=images&filters[is_featured]=true', {
+        const response = await axios.get( STRAPI_BASE_URL +'/api/products?populate=images&filters[is_featured]=true', {
             headers: {
                 Authorization: `Bearer ${API_TOKEN}`
             }

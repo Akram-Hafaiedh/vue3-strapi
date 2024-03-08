@@ -998,6 +998,11 @@ export interface ApiProductProduct extends Schema.CollectionType {
       'manyToMany',
       'api::category.category'
     >;
+    specifications: Attribute.Relation<
+      'api::product.product',
+      'oneToMany',
+      'api::specification.specification'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1045,6 +1050,43 @@ export interface ApiReviewReview extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::review.review',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiSpecificationSpecification extends Schema.CollectionType {
+  collectionName: 'specifications';
+  info: {
+    singularName: 'specification';
+    pluralName: 'specifications';
+    displayName: 'Specification';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    value: Attribute.String;
+    product: Attribute.Relation<
+      'api::specification.specification',
+      'manyToOne',
+      'api::product.product'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::specification.specification',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::specification.specification',
       'oneToOne',
       'admin::user'
     > &
@@ -1110,6 +1152,7 @@ declare module '@strapi/types' {
       'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
       'api::review.review': ApiReviewReview;
+      'api::specification.specification': ApiSpecificationSpecification;
       'api::stock.stock': ApiStockStock;
     }
   }

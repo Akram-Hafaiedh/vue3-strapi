@@ -1,4 +1,4 @@
-import { API_TOKEN } from '../config'
+import { API_TOKEN , STRAPI_BASE_URL} from '../config'
 import axios from 'axios'
 
 export async function addProductToCart(product) {
@@ -8,7 +8,7 @@ export async function addProductToCart(product) {
             product: product,
             quantity: 1
         }
-        const response = await axios.post('http://localhost:1337/api/cartitems', { data: cartitem }, {
+        const response = await axios.post(STRAPI_BASE_URL + '/api/cartitems', { data: cartitem }, {
             headers: {
                 Authorization: `Bearer ${API_TOKEN}`
             }
@@ -24,7 +24,7 @@ export async function addProductToCart(product) {
 export async function getCartItems() {
 
     try {
-        const response = await axios.get('http://localhost:1337/api/cartitems?populate=product', {
+        const response = await axios.get(STRAPI_BASE_URL+'/api/cartitems?populate=product', {
             headers: {
                 Authorization: `Bearer ${API_TOKEN}`
             }
@@ -38,7 +38,7 @@ export async function getCartItems() {
 
 export async function removeItemFromCart(cartitemId) {
     try {
-        const response = await axios.delete(`http://localhost:1337/api/cartitems/${cartitemId}`, {
+        const response = await axios.delete(`${STRAPI_BASE_URL}/api/cartitems/${cartitemId}`, {
             headers: {
                 Authorization: `Bearer ${API_TOKEN}`
             }

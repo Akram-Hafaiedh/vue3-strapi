@@ -2,7 +2,12 @@
     <div class="">
         <div class="flex flex-col items-center justify-center min-h-screen bg-white">
             <router-link to="/" class="text-3xl font-bold text-black">
-               UPS
+                <template v-if="imageExists">
+                    <img class="h-32" src="/UPS.png" alt="Logo">
+                </template>
+                <template v-else>
+                    UPS
+                </template>
             </router-link>
             <div class="w-full max-w-md px-4 py-8 mt-4 bg-gray-300 rounded shadow shadow-white">
                 <h1 class="mb-4 text-3xl font-semibold text-center text-black">Register</h1>
@@ -20,7 +25,7 @@
                             Email
                         </label>
                         <input v-model="email"
-                            class="w-full px-3 py-2 mb-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             id="email" type="email" placeholder="Email">
                     </div>
                     <div>
@@ -53,32 +58,48 @@
 </template>
 
 <script>
+import { registerUser } from '@/api/auth';
 export default {
     name: 'RegisterPage',
     data() {
         return {
             username: '',
             email: '',
-            password: ''
+            password: '',
+            imageExists: false,
         }
     },
     methods: {
-        register() {
-            // const newUser = {
-            //     username: this.username,
-            //     email: this.email,
-            //     password: this.password
-            // }
-            // users.push(newUser);
-            // this.username = '';
-            // this.email = '';
-            // this.password = '';
-
-            // this.$router.push({ name: 'login' });
-            // console.log('Users:', users);
-            // console.log('Registered user:', newUser);
-            console.log('Register in with username:', this.username, 'email:', this.email, 'and password:', this.password);
+        async register() {
+            try {
+                const response = await registerUser(this.email, this.password, this.username);
+                if (response.jwt) {
+                    localStorage.setItem('jwt', response.jwt);
+                    this.username = '';
+                    this.email = '';
+                    this.password = '';
+                    // Handle successful registration, maybe redirect to another page
+                    this.$router.push({ name: 'login' });
+                } else {
+                    console.error('Registration failed:', response);
+                }
+            } catch (error) {
+                console.error('Registration failed:', error);
+            }
+        },
+        checkImageExists(url) {
+            return new Promise((resolve) => {
+                var img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
         }
+    },
+    mounted() {
+        this.checkImageExists("/UPS.png").then(exists => {
+            this.imageExists = exists;
+        });
     }
 }
 </script>

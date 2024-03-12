@@ -2,7 +2,12 @@
     <div class="">
         <div class="flex flex-col items-center justify-center min-h-screen bg-white">
             <router-link to="/" class="text-3xl font-bold text-black">
-                <img class="h-32" src="/UPS.png" alt="Logo">
+                <template v-if="imageExists('/UPS.png')">
+                    <p class="text-3xl font-bold text-black">UPS</p>
+                </template>
+                <template v-else>
+                    <img class="h-32" src="/UPS.png" alt="Logo">
+                </template>
             </router-link>
             <div class="w-full max-w-md px-4 py-8 mt-4 bg-gray-300 rounded shadow">
                 <h1 class="mb-4 text-3xl font-semibold text-center text-black">Login</h1>
@@ -53,7 +58,7 @@
 </template>
 
 <script>
-
+import { loginUser } from '@/api/auth'
 export default {
     name: 'LoginPage',
     data() {
@@ -65,27 +70,16 @@ export default {
         }
     },
     computed() {
-        
+
     },
     methods: {
         async login() {
-            this.loginAttempted = true;
-            if (!this.username || !this.password) {
-                this.error = 'Username and password are required';
-                return;
+            try {
+                await loginUser(this.email, this.password);
+                // Handle successful login, maybe redirect to another page
+            } catch (error) {
+                console.error('Login failed:', error);
             }
-            // useAuthStore.login(this.username, this.password);
-            // const foundUser = users.find(user => user.username === this.username && user.password === this.password);
-            // if (foundUser) {
-            //     const token = btoa(JSON.stringify(foundUser));
-            //     localStorage.setItem('token', token);
-            //     // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            //     this.$router.push({ name: 'home' });
-            // } else {
-            //     this.error = 'Invalid username or password';
-            // }
-            // // Implement login functionality here
-            console.log('Logging in with username:', this.username, 'and password:', this.password);
         }
     }
 }
